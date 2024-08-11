@@ -1,22 +1,22 @@
-const supabase = require("../config/supabaseClient");
+﻿const supabase = require("../config/supabaseClient");
 
-const createForm = async (req, res) => {
-    const { name, description } = req.body;
+const createTeam = async (req, res) => {
+    const { team_number } = req.body;
     try {
         const { error } = await supabase
-            .from("scouting_forms")
-            .insert({ name, description });
+            .from("teams")
+            .insert({ team_number });
         if (error) throw error;
-        res.status(200).json("Form configuration created successfully");
+        res.status(200).json("Team created successfully");
     } catch (error) {
         res.status(400).json("Error: " + error.message);
     }
 };
 
-const getForms = async (req, res) => {
+const getTeams = async (req, res) => {
     try {
         const { data, error } = await supabase
-            .from("scouting_forms")
+            .from("teams")
             .select();
         if (error) throw error;
         res.status(200).json(data);
@@ -25,17 +25,17 @@ const getForms = async (req, res) => {
     }
 };
 
-const getFormById = async (req, res) => {
+const getTeamById = async (req, res) => {
     const { id } = req.params;
     try {
         const { data, error } = await supabase
-            .from("scouting_forms")
+            .from("teams")
             .select()
-            .eq('name', id)
+            .eq('team_numbers', id)
             .single();
         if (error) throw error;
         if (!data) {
-            return res.status(404).json({ message: "Form not found" });
+            return res.status(404).json({ message: "Team not found" });
         }
         res.status(200).json(data);
     } catch (error) {
@@ -43,39 +43,39 @@ const getFormById = async (req, res) => {
     }
 };
 
-const updateForm = async (req, res) => {
+const updateTeam = async (req, res) => {
     const { id } = req.params;
-    const { name, description } = req.body;
+    const { team_number } = req.body;
     try {
         const { error } = await supabase
-            .from("scouting_forms")
-            .update({ name, description })
-            .eq('name', id);
+            .from("teams")
+            .update({ team_number })
+            .eq('team_number', id);
         if (error) throw error;
-        res.status(200).json("Form configuration updated successfully");
+        res.status(200).json("Team updated successfully");
     } catch (error) {
         res.status(400).json("Error: " + error.message);
     }
 };
 
-const deleteForm = async (req, res) => {
+const deleteTeam = async (req, res) => {
     const { id } = req.params;
     try {
         const { error } = await supabase
-            .from("scouting_forms")
+            .from("teams")
             .delete()
-            .eq('name', id);
+            .eq('team_number', id);
         if (error) throw error;
-        res.status(200).json("Form configuration deleted successfully");
+        res.status(200).json("Team deleted successfully");
     } catch (error) {
         res.status(400).json("Error: " + error.message);
     }
 };
 
 module.exports = {
-    createForm,
-    getForms,
-    getFormById,
-    updateForm,
-    deleteForm
+    createTeam,
+    getTeams,
+    getTeamById,
+    updateTeam,
+    deleteTeam
 };
