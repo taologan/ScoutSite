@@ -1,31 +1,36 @@
 ﻿const express = require('express')
 const supabase = require('../config/supabaseClient')
+const {
+    createEvent,
+    getEvents
+} = require("../controllers/eventController")
 
 const router = express.Router()
 const fetchData = async () => {
     const {data, error} = await supabase
-        .from("test")
+        .from("events")
         .select()
     return data
 }
 
 
-router.get('/', async (req, res) => {
-    res.json({ message: 'Get all events!' })
-    try {
-        console.log(await fetchData())
-    } catch (error) {
-        console.error(error)
-    }
-})
+// router.get('/', async (req, res) => {
+//     res.json({ message: 'Get all events!' })
+//     let output
+//     try {
+//         output = await fetchData()
+//     } catch (error) {
+//         console.log(error)
+//     }
+//     console.log(output)
+// })
+router.get('/', getEvents)
 
 router.get('/:id', (req, res) => {
     res.json({ message: 'Get event ID!' })
 })
 
-router.post('/', (req, res) => {
-    res.json({ message: 'Add event' })
-})
+router.post('/', createEvent)
 
 router.delete('/:id', (req, res) => {
     res.json({ message: 'Delete event' })
