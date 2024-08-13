@@ -67,7 +67,7 @@ const deleteEvent = async (req, res) => {
         const { error } = await supabase
             .from("events")
             .delete()
-            .eq('name', id);
+            .eq('id', id);
         if (error) throw error;
         res.status(200).json("Event deleted successfully");
     } catch (error) {
