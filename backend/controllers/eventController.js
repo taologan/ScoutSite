@@ -52,7 +52,7 @@ const updateEvent = async (req, res) => {
         const { error } = await supabase
             .from("events")
             .update({ name, event_code, scouting_form_id })
-            .eq('name', id);
+            .eq('id', id);
         if (error) throw error;
         res.status(200).json("Event updated successfully");
     } catch (error) {

@@ -1,37 +1,53 @@
-﻿import {useState} from "react";
-import {json} from "react-router-dom";
-const EventForm = () => {
-    const [name, setName] = useState("")
-    const [eventCode, setEventCode] = useState("")
-    const[scoutingFormID, setScoutingFormID] = useState("")
-    const[error, setError] = useState(null)
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        const event = {name, event_code: eventCode, scouting_Form_ID: scoutingFormID}
+﻿import { useState, useEffect } from "react";
 
-        const response = await fetch("/api/events", {
-            method: "POST",
+const EventForm = ({ eventToEdit, onFormSubmit }) => {
+    const [name, setName] = useState("");
+    const [eventCode, setEventCode] = useState("");
+    const [scoutingFormID, setScoutingFormID] = useState("");
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        if (eventToEdit) {
+            setName(eventToEdit.name);
+            setEventCode(eventToEdit.event_code);
+            setScoutingFormID(eventToEdit.scouting_form_id || "");
+        }
+    }, [eventToEdit]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const event = {
+            name,
+            event_code: eventCode,
+            scouting_form_id: scoutingFormID || null
+        };
+
+        const response = await fetch(eventToEdit ? `/api/events/${eventToEdit.id}` : "/api/events", {
+            method: eventToEdit ? "PATCH" : "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(event)
-        })
-        const json = response.json()
+            body: JSON.stringify(event),
+        });
+
+        const json = await response.json();
         if (response.ok) {
-            console.log("I CREATE EVENT AND IT WORKED")
-            setName("")
-            setEventCode("")
-            setScoutingFormID("")
+            console.log(eventToEdit ? "Event updated successfully" : "Event created successfully");
+            setName("");
+            setEventCode("");
+            setScoutingFormID("");
+            onFormSubmit();
         } else {
-            setError(json.error)
+            setError(json.error);
         }
-    }
+    };
+
     return (
         <form onSubmit={handleSubmit}>
             <div>
                 <label htmlFor="name">Name:</label>
                 <input
-                    class = "outline"
+                    className="outline"
                     type="text"
                     id="name"
                     value={name}
@@ -42,7 +58,7 @@ const EventForm = () => {
             <div>
                 <label htmlFor="eventCode">Event Code:</label>
                 <input
-                    class = "outline"
+                    className="outline"
                     type="text"
                     id="eventCode"
                     value={eventCode}
@@ -53,17 +69,19 @@ const EventForm = () => {
             <div>
                 <label htmlFor="scoutingFormId">Scouting Form ID:</label>
                 <input
-                    class = "outline"
+                    className="outline"
                     type="text"
                     id="scoutingFormId"
                     value={scoutingFormID}
                     onChange={(e) => setScoutingFormID(e.target.value)}
                 />
             </div>
-            <button class = "outline" type="submit">Create Event</button>
+            <button className="outline" type="submit">
+                {eventToEdit ? "Update Event" : "Create Event"}
+            </button>
             {error && <p>{error}</p>}
         </form>
-    )
-}
+    );
+};
 
-export default EventForm
+export default EventForm;
