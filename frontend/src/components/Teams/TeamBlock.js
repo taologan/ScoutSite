@@ -1,11 +1,10 @@
-﻿
 import { useState } from "react";
 
-const EventBlock = ({ eventDetails, onEdit }) => {
+const TeamBlock = ({ teamDetails: team_number, onEdit }) => {
     const [error, setError] = useState(null);
 
     const handleDelete = async () => {
-        const response = await fetch(`http://localhost:4000/api/events/${eventDetails.id}`, {
+        const response = await fetch(`http://localhost:4000/api/teams/${team_number.id}`, {
             method: "DELETE",
         });
         const json = await response.json();
@@ -16,14 +15,12 @@ const EventBlock = ({ eventDetails, onEdit }) => {
 
     return (
         <div className="flex rounded border-2">
-            <h2>{eventDetails.name}</h2>
-            <h3>{eventDetails.event_code}</h3>
-            <h3>{eventDetails.scouting_form_id}</h3>
-            <button type="button" onClick={() => onEdit(eventDetails)}>Edit</button>
+            <h2>Team {team_number.team_number}</h2>
+            <button type="button" onClick={() => onEdit(team_number)}>Edit</button>
             <button type="submit" onClick={handleDelete}>Delete</button>
             {error && <p>{error}</p>}
         </div>
     );
 };
 
-export default EventBlock;
+export default TeamBlock;

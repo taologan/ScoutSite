@@ -1,4 +1,5 @@
 ﻿const express = require('express')
+const cors = require('cors')
 require('dotenv').config()
 
 const app = express()
@@ -9,6 +10,7 @@ const fields = require('./routes/formFields')
 const data = require('./routes/data')
 const supabase = require('./config/supabaseClient')
 
+app.use(cors())
 app.use(express.json())
 app.use((req, res, next) =>
 {

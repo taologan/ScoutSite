@@ -50,7 +50,7 @@ const updateTeam = async (req, res) => {
         const { error } = await supabase
             .from("teams")
             .update({ team_number })
-            .eq('team_number', id);
+            .eq('id', id);
         if (error) throw error;
         res.status(200).json("Team updated successfully");
     } catch (error) {
@@ -64,7 +64,7 @@ const deleteTeam = async (req, res) => {
         const { error } = await supabase
             .from("teams")
             .delete()
-            .eq('team_number', id);
+            .eq('id', id);
         if (error) throw error;
         res.status(200).json("Team deleted successfully");
     } catch (error) {

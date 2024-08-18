@@ -50,7 +50,7 @@ const updateForm = async (req, res) => {
         const { error } = await supabase
             .from("scouting_forms")
             .update({ name, description })
-            .eq('name', id);
+            .eq('id', id);
         if (error) throw error;
         res.status(200).json("Form configuration updated successfully");
     } catch (error) {
@@ -64,7 +64,7 @@ const deleteForm = async (req, res) => {
         const { error } = await supabase
             .from("scouting_forms")
             .delete()
-            .eq('name', id);
+            .eq('id', id);
         if (error) throw error;
         res.status(200).json("Form configuration deleted successfully");
     } catch (error) {

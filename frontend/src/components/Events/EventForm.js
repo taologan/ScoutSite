@@ -22,7 +22,7 @@ const EventForm = ({ eventToEdit, onFormSubmit }) => {
             scouting_form_id: scoutingFormID || null
         };
 
-        const response = await fetch(eventToEdit ? `/api/events/${eventToEdit.id}` : "/api/events", {
+        const response = await fetch(eventToEdit ? `http://localhost:4000/api/events/${eventToEdit.id}` : "http://localhost:4000/api/events", {
             method: eventToEdit ? "PATCH" : "POST",
             headers: {
                 "Content-Type": "application/json",

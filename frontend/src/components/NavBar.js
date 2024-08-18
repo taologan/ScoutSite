@@ -23,6 +23,12 @@ const NavBar = () => {
                         <Link to="/events">
                             <h1>Events</h1>
                         </Link>
+                        <Link to="/teams">
+                            <h1>Teams</h1>
+                        </Link>
+                        <Link to="/forms">
+                            <h1>Forms</h1>
+                        </Link>
                     </>
                 )}
             </div>

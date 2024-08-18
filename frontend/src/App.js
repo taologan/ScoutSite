@@ -4,9 +4,11 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from "./pages/Home";
 import Events from "./pages/Events";
 import Teams from "./pages/Teams";
+import Forms from "./pages/Forms";
 
 // component imports
 import NavBar from "./components/NavBar";
+
 
 function App() {
   return (
@@ -17,7 +19,8 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="events" element={<Events />} />
-              <Route path="teams" element={<Teams/>} />  
+              <Route path="teams" element={<Teams/>} />
+              <Route path="forms" element={<Forms/>} />
             </Routes>
           </div>
         </BrowserRouter>
