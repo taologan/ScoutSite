@@ -1,4 +1,5 @@
 import { useState } from "react";
+import {Link} from "react-router-dom";
 
 const ScoutingFormBlock = ({ formDetails, onEdit }) => {
     const [error, setError] = useState(null);
@@ -20,6 +21,9 @@ const ScoutingFormBlock = ({ formDetails, onEdit }) => {
             <button type="button" onClick={() => onEdit(formDetails)}>Edit</button>
             <button type="submit" onClick={handleDelete}>Delete</button>
             {error && <p>{error}</p>}
+            <Link to = {`/forms/${formDetails.id}`}>
+                <h1>FHUOEWHFUEWFEWUOFHEWOIFJEWOIFHWEOUF</h1>
+            </Link>
         </div>
     );
 };

@@ -44,8 +44,7 @@ const getFormFieldById = async (req, res) => {
         const { data, error } = await supabase
             .from("form_fields")
             .select()
-            .eq('field_label', id)
-            .single();
+            .eq('scouting_form_id', id)
         if (error) throw error;
         if (!data) {
             return res.status(404).json({ message: "Form field not found" });

@@ -5,9 +5,8 @@ import Home from "./pages/Home";
 import Events from "./pages/Events";
 import Teams from "./pages/Teams";
 import Forms from "./pages/Forms";
-
-// component imports
 import NavBar from "./components/NavBar";
+import Fields from "./pages/Fields";
 
 
 function App() {
@@ -21,6 +20,7 @@ function App() {
               <Route path="events" element={<Events />} />
               <Route path="teams" element={<Teams/>} />
               <Route path="forms" element={<Forms/>} />
+              <Route path="forms/:formId" element={<Fields/>} />
             </Routes>
           </div>
         </BrowserRouter>
