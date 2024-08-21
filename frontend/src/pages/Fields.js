@@ -28,19 +28,23 @@ function Fields() {
 
 
     return (
-        <div className="Fields">
-            <h1>Fields for Form ID: {formId}</h1>
-            <FieldForm formToEdit={fieldToEdit} onFormSubmit={handleFormSubmit} formId={formId} />
-            {fields && fields.map((field) => (
-                // <div key={field.id} className="field-block">
-                //     <h2>{field.field_label}</h2>
-                //     <p>Type: {field.field_type}</p>
-                //     <p>Required: {field.required ? 'Yes' : 'No'}</p>
-                //     <p>Display Order: {field.display_order}</p>
-                //     <button onClick={() => handleEdit(field)}>Edit</button>
-                // </div>
-                <FieldBlock fieldDetails = {field} onEdit = {handleEdit}></FieldBlock>
-            ))}
+        <div className="min-h-screen bg-gray-100">
+            <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 shadow-md">
+                <div className="container mx-auto px-4 py-6">
+                    <h1 className="text-4xl font-bold text-white text-center">Fields for Form ID: {formId}</h1>
+                </div>
+            </div>
+            <div className="container mx-auto px-4 py-8">
+                <div className="mb-8 bg-white rounded-lg shadow-md p-6">
+                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">Create or Edit Field</h2>
+                    <FieldForm formToEdit={fieldToEdit} onFormSubmit={handleFormSubmit} formId={formId} />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {fields && fields.map((field) => (
+                        <FieldBlock key={field.id} fieldDetails={field} onEdit={handleEdit} />
+                    ))}
+                </div>
+            </div>
         </div>
     );
 }

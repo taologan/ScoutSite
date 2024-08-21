@@ -26,12 +26,23 @@ const ScoutingForms = () => {
     };
 
     return (
-        <div className="ScoutingForms">
-            <h1>SCOUTING FORMS</h1>
-            <FormForm formToEdit={formToEdit} onFormSubmit={handleFormSubmit} />
-            {scoutingForms && scoutingForms.map((form) => (
-                <FormBlock key={form.id} formDetails={form} onEdit={handleEdit} />
-            ))}
+        <div className="min-h-screen bg-gray-100">
+            <div className="bg-gradient-to-r from-blue-500 to-blue-600 shadow-md">
+                <div className="container mx-auto px-4 py-6">
+                    <h1 className="text-4xl font-bold text-white text-center">Scouting Forms</h1>
+                </div>
+            </div>
+            <div className="container mx-auto px-4 py-8">
+                <div className="mb-8 bg-white rounded-lg shadow-md p-6">
+                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">Create or Edit Scouting Form</h2>
+                    <FormForm formToEdit={formToEdit} onFormSubmit={handleFormSubmit} />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {scoutingForms && scoutingForms.map((form) => (
+                        <FormBlock key={form.id} formDetails={form} onEdit={handleEdit} />
+                    ))}
+                </div>
+            </div>
         </div>
     );
 };

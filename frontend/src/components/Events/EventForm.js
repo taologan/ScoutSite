@@ -11,6 +11,10 @@ const EventForm = ({ eventToEdit, onFormSubmit }) => {
             setName(eventToEdit.name);
             setEventCode(eventToEdit.event_code);
             setScoutingFormID(eventToEdit.scouting_form_id || "");
+        } else {
+            setName("");
+            setEventCode("");
+            setScoutingFormID("");
         }
     }, [eventToEdit]);
 
@@ -36,51 +40,56 @@ const EventForm = ({ eventToEdit, onFormSubmit }) => {
             setName("");
             setEventCode("");
             setScoutingFormID("");
-            onFormSubmit();
+            onFormSubmit(json); // Pass the new/updated event data to the parent component
         } else {
             setError(json.error);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label htmlFor="name">Name:</label>
-                <input
-                    className="outline"
-                    type="text"
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                />
-            </div>
-            <div>
-                <label htmlFor="eventCode">Event Code:</label>
-                <input
-                    className="outline"
-                    type="text"
-                    id="eventCode"
-                    value={eventCode}
-                    onChange={(e) => setEventCode(e.target.value)}
-                    required
-                />
-            </div>
-            <div>
-                <label htmlFor="scoutingFormId">Scouting Form ID:</label>
-                <input
-                    className="outline"
-                    type="text"
-                    id="scoutingFormId"
-                    value={scoutingFormID}
-                    onChange={(e) => setScoutingFormID(e.target.value)}
-                />
-            </div>
-            <button className="outline" type="submit">
-                {eventToEdit ? "Update Event" : "Create Event"}
-            </button>
-            {error && <p>{error}</p>}
-        </form>
+        <div className="flex justify-center items-center min-h-screen">
+            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+                <div className="mb-4">
+                    <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Name:</label>
+                    <input
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        type="text"
+                        id="name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label htmlFor="eventCode" className="block text-gray-700 text-sm font-bold mb-2">Event Code:</label>
+                    <input
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        type="text"
+                        id="eventCode"
+                        value={eventCode}
+                        onChange={(e) => setEventCode(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="mb-6">
+                    <label htmlFor="scoutingFormId" className="block text-gray-700 text-sm font-bold mb-2">Scouting Form ID:</label>
+                    <input
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        type="text"
+                        id="scoutingFormId"
+                        value={scoutingFormID}
+                        onChange={(e) => setScoutingFormID(e.target.value)}
+                    />
+                </div>
+                <button
+                    className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit"
+                >
+                    {eventToEdit ? "Update Event" : "Create Event"}
+                </button>
+                {error && <p className="text-red-500 text-xs italic mt-4">{error}</p>}
+            </form>
+        </div>
     );
 };
 
