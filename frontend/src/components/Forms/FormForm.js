@@ -29,7 +29,7 @@ const ScoutingFormForm = ({ formToEdit, onFormSubmit }) => {
             console.log(formToEdit ? "Scouting form updated successfully" : "Scouting form created successfully");
             setName("");
             setDescription("");
-            onFormSubmit();
+            onFormSubmit(json);
         } else {
             setError(json.error);
         }

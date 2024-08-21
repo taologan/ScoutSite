@@ -7,22 +7,28 @@ const ScoutingForms = () => {
     const [formToEdit, setFormToEdit] = useState(null);
 
     useEffect(() => {
-        const fetchScoutingForms = async () => {
-            const response = await fetch("http://localhost:4000/api/forms");
-            const json = await response.json();
-            if (response.ok) {
-                setScoutingForms(json);
-            }
-        };
         fetchScoutingForms();
     }, []);
+
+    const fetchScoutingForms = async () => {
+        const response = await fetch("http://localhost:4000/api/forms");
+        const json = await response.json();
+        if (response.ok) {
+            setScoutingForms(json);
+        }
+    };
 
     const handleEdit = (form) => {
         setFormToEdit(form);
     };
 
-    const handleFormSubmit = () => {
+    const handleFormSubmit = async (newForm) => {
+        await fetchScoutingForms()
         setFormToEdit(null);
+    };
+
+    const handleDelete = (deletedFormId) => {
+        setScoutingForms(prevForms => prevForms.filter(form => form.id !== deletedFormId));
     };
 
     return (
@@ -39,7 +45,12 @@ const ScoutingForms = () => {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {scoutingForms && scoutingForms.map((form) => (
-                        <FormBlock key={form.id} formDetails={form} onEdit={handleEdit} />
+                        <FormBlock
+                            key={form.id}
+                            formDetails={form}
+                            onEdit={handleEdit}
+                            onDelete={handleDelete}
+                        />
                     ))}
                 </div>
             </div>

@@ -40,7 +40,7 @@ const EventForm = ({ eventToEdit, onFormSubmit }) => {
             setName("");
             setEventCode("");
             setScoutingFormID("");
-            onFormSubmit(json); // Pass the new/updated event data to the parent component
+            onFormSubmit(json); // Pass the new or updated event back
         } else {
             setError(json.error);
         }

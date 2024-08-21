@@ -1,16 +1,22 @@
 import { useState } from "react";
 import {Link} from "react-router-dom";
 
-const ScoutingFormBlock = ({ formDetails, onEdit }) => {
+const ScoutingFormBlock = ({ formDetails, onEdit, onDelete }) => {
     const [error, setError] = useState(null);
 
     const handleDelete = async () => {
-        const response = await fetch(`http://localhost:4000/api/forms/${formDetails.id}`, {
-            method: "DELETE",
-        });
-        const json = await response.json();
-        if (!response.ok) {
-            setError(json.error);
+        try {
+            const response = await fetch(`http://localhost:4000/api/forms/${formDetails.id}`, {
+                method: "DELETE",
+            });
+            if (response.ok) {
+                onDelete(formDetails.id);
+            } else {
+                const json = await response.json();
+                setError(json.error);
+            }
+        } catch (error) {
+            setError("An error occurred while deleting the form");
         }
     };
 
