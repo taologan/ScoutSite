@@ -32,7 +32,7 @@ const getEventById = async (req, res) => {
         const { data, error } = await supabase
             .from("events")
             .select()
-            .eq('name', id)
+            .eq('id', id)
             .single();
         if (error) throw error;
         if (!data) {

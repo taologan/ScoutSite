@@ -22,7 +22,7 @@ const Teams = () => {
         setTeamToEdit(team);
     };
 
-    const handleFormSubmit = async (newTeam) => {
+    const handleFormSubmit = async () => {
         await fetchTeams();
         setTeamToEdit(null);
     };

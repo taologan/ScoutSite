@@ -7,6 +7,6 @@ const {
 const router = express.Router();
 
 router.post('/', createScoutingData);
-router.get('/', getScoutingData);
+router.get('/:id', getScoutingData);
 
 module.exports = router;

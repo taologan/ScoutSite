@@ -22,7 +22,7 @@ const ScoutingForms = () => {
         setFormToEdit(form);
     };
 
-    const handleFormSubmit = async (newForm) => {
+    const handleFormSubmit = async () => {
         await fetchScoutingForms()
         setFormToEdit(null);
     };

@@ -5,18 +5,30 @@ const EventForm = ({ eventToEdit, onFormSubmit }) => {
     const [eventCode, setEventCode] = useState("");
     const [scoutingFormID, setScoutingFormID] = useState("");
     const [error, setError] = useState(null);
+    const [scoutingForms, setScoutingForms] = useState([]);
 
     useEffect(() => {
         if (eventToEdit) {
             setName(eventToEdit.name);
             setEventCode(eventToEdit.event_code);
             setScoutingFormID(eventToEdit.scouting_form_id || "");
-        } else {
-            setName("");
-            setEventCode("");
-            setScoutingFormID("");
         }
+        fetchScoutingForms();
     }, [eventToEdit]);
+
+    const fetchScoutingForms = async () => {
+        try {
+            const response = await fetch("http://localhost:4000/api/forms");
+            if (response.ok) {
+                const forms = await response.json();
+                setScoutingForms(forms);
+            } else {
+                throw new Error("Failed to fetch scouting forms");
+            }
+        } catch (error) {
+            setError("Error fetching scouting forms: " + error.message);
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -40,14 +52,14 @@ const EventForm = ({ eventToEdit, onFormSubmit }) => {
             setName("");
             setEventCode("");
             setScoutingFormID("");
-            onFormSubmit(json); // Pass the new or updated event back
+            onFormSubmit();
         } else {
             setError(json.error);
         }
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen">
+        <div className="flex justify-center items-center min-h-screen bg-gray-100">
             <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
                 <div className="mb-4">
                     <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Name:</label>
@@ -72,14 +84,20 @@ const EventForm = ({ eventToEdit, onFormSubmit }) => {
                     />
                 </div>
                 <div className="mb-6">
-                    <label htmlFor="scoutingFormId" className="block text-gray-700 text-sm font-bold mb-2">Scouting Form ID:</label>
-                    <input
+                    <label htmlFor="scoutingFormId" className="block text-gray-700 text-sm font-bold mb-2">Scouting Form:</label>
+                    <select
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        type="text"
                         id="scoutingFormId"
                         value={scoutingFormID}
                         onChange={(e) => setScoutingFormID(e.target.value)}
-                    />
+                    >
+                        <option value="">Select a scouting form</option>
+                        {scoutingForms.map((form) => (
+                            <option key={form.id} value={form.id}>
+                                {form.name}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <button
                     className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

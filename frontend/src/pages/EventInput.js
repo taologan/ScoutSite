@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import {useParams} from "react-router-dom";
 import React, { useEffect, useState, useRef } from "react";
 import InputField from "../components/Fields/InputField";
 
@@ -9,30 +9,53 @@ function EventInput() {
     const [filteredTeams, setFilteredTeams] = useState([]);
     const [selectedTeam, setSelectedTeam] = useState("");
     const [teamInput, setTeamInput] = useState("");
+    const [teamNumber, setTeamNumber] = useState("");
     const [formData, setFormData] = useState({});
     const [error, setError] = useState(null);
     const [showDropdown, setShowDropdown] = useState(false);
     const dropdownRef = useRef(null);
+    const [eventDetails, setEventDetails] = useState(null);
 
     useEffect(() => {
-        const fetchFields = async () => {
-            const response = await fetch(`http://localhost:4000/api/fields/${formId}`);
-            const json = await response.json();
-            if (response.ok) {
-                setFields(json);
+        const fetchEventDetails = async () => {
+            try {
+                const response = await fetch(`http://localhost:4000/api/events/${formId}`);
+                const json = await response.json();
+                if (response.ok) {
+                    setEventDetails(json);
+                    if (json && json.scouting_form_id) {
+                        const fieldsResponse = await fetch(`http://localhost:4000/api/fields/${json.scouting_form_id}`);
+                        const fieldsJson = await fieldsResponse.json();
+                        if (fieldsResponse.ok) {
+                            setFields(fieldsJson);
+                        } else {
+                            console.error("Failed to fetch fields:", fieldsJson);
+                        }
+                    }
+                } else {
+                    console.error("Failed to fetch event details:", json);
+                }
+            } catch (error) {
+                console.error("Error fetching event details:", error);
             }
         };
 
         const fetchTeams = async () => {
-            const response = await fetch("http://localhost:4000/api/teams");
-            const json = await response.json();
-            if (response.ok) {
-                setTeams(json);
-                setFilteredTeams(json);
+            try {
+                const response = await fetch("http://localhost:4000/api/teams");
+                const json = await response.json();
+                if (response.ok) {
+                    setTeams(json);
+                    setFilteredTeams(json);
+                } else {
+                    console.error("Failed to fetch teams:", json);
+                }
+            } catch (error) {
+                console.error("Error fetching teams:", error);
             }
         };
 
-        fetchFields();
+        fetchEventDetails();
         fetchTeams();
     }, [formId]);
 
@@ -63,6 +86,9 @@ function EventInput() {
     const handleTeamSelect = (team) => {
         setSelectedTeam(team.id);
         setTeamInput(team.team_number.toString());
+        console.log(teamInput)
+        setTeamNumber(team.team_number.toString());
+        console.log(teamNumber)
         setShowDropdown(false);
     };
 
@@ -81,9 +107,10 @@ function EventInput() {
         }
 
         const scoutingData = {
-            scouting_form_id: formId,
-            event_id: null, // You might want to add event selection as well
+            scouting_form_id: eventDetails.scouting_form_id,
+            event_id: formId,
             team_id: selectedTeam,
+            team_number: teamNumber,
             data: formData
         };
 
@@ -101,6 +128,7 @@ function EventInput() {
                 setFormData({});
                 setSelectedTeam("");
                 setTeamInput("");
+                setTeamNumber("");
                 setError(null);
             } else {
                 const errorData = await response.json();
@@ -119,6 +147,16 @@ function EventInput() {
                 </div>
             </div>
             <div className="container mx-auto px-4 py-8">
+                {/*<div className="container mx-auto px-4 py-8">*/}
+                {/*    {eventDetails && (*/}
+                {/*        <div className="mb-8">*/}
+                {/*            <EventBlock*/}
+                {/*                eventDetails={eventDetails}*/}
+                {/*                onEdit={() => {}}*/}
+                {/*                onDelete={() => {}}*/}
+                {/*            />*/}
+                {/*        </div>*/}
+                {/*    )} </div>*/}
                 <div className="bg-white rounded-lg shadow-md p-6">
                     <h2 className="text-2xl font-semibold mb-4 text-gray-800">Form ID: {formId}</h2>
                     <form onSubmit={handleSubmit} className="space-y-6">

@@ -10,7 +10,7 @@ const EventBlock = ({ eventDetails, onEdit, onDelete }) => {
                 method: "DELETE",
             });
             if (response.ok) {
-                onDelete(eventDetails.id); // Call the onDelete function passed from the parent
+                onDelete(eventDetails.id);
             } else {
                 const errorData = await response.json();
                 setError(errorData.error || "Failed to delete event");
@@ -39,10 +39,17 @@ const EventBlock = ({ eventDetails, onEdit, onDelete }) => {
                     Delete
                 </button>
                 <Link
-                    to={`/event-input/${eventDetails.scouting_form_id}`}
+                    to={`/events/${eventDetails.id}`}
+                    state={{ scoutingFormId: eventDetails.scouting_form_id }}
                     className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out"
                 >
                     Go to Event Input
+                </Link>
+                <Link
+                    to={`/data/${eventDetails.id}`}
+                    className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out"
+                >
+                    View Data
                 </Link>
             </div>
             {error && <p className="text-red-500 mt-4 text-sm">{error}</p>}

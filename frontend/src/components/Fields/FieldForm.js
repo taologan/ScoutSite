@@ -1,50 +1,69 @@
 import { useState, useEffect } from 'react';
 
 const FieldForm = ({ formToEdit, onFormSubmit, formId }) => {
-    const [scouting_form_id, setScouting_form_id] = useState(formId)
-    const [field_label, setFieldLabel] = useState("")
-    const [field_type, setFieldType] = useState("")
-    const [field_options, setFieldOptions] = useState("")
-    const [required, setRequired] = useState(false)
-    const [display_order, setDisplay_order] = useState("")
+    const [fieldLabel, setFieldLabel] = useState('');
+    const [fieldType, setFieldType] = useState('');
+    const [fieldOptions, setFieldOptions] = useState('');
+    const [required, setRequired] = useState(false);
+    const [displayOrder, setDisplayOrder] = useState('');
     const [error, setError] = useState(null);
 
     useEffect(() => {
         if (formToEdit) {
-            setScouting_form_id(formToEdit.scouting_form_id);
             setFieldLabel(formToEdit.field_label);
             setFieldType(formToEdit.field_type);
-            setFieldOptions(formToEdit.field_options);
+            setFieldOptions(formToEdit.field_options || '');
             setRequired(formToEdit.required);
-            setDisplay_order(formToEdit.display_order);
+            setDisplayOrder(formToEdit.display_order.toString());
         }
-    }, [formToEdit])
+    }, [formToEdit]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const form = { scouting_form_id, field_label, field_type, field_options, required, display_order: parseInt(display_order) };
+        const field = {
+            scouting_form_id: formId,
+            field_label: fieldLabel,
+            field_type: fieldType,
+            field_options: fieldOptions ? fieldOptions.split(",").map(option => option.trim()) : [],
+            required,
+            display_order: parseInt(displayOrder)
+        };
 
-        const response = await fetch(formToEdit ? `http://localhost:4000/api/fields/${formToEdit.id}`
-            : "http://localhost:4000/api/fields", {
-            method: formToEdit ? "PATCH" : "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(form),
-        })
+        const url = formToEdit
+            ? `http://localhost:4000/api/fields/${formToEdit.id}`
+            : "http://localhost:4000/api/fields";
 
-        const json = await response.json();
+        const method = formToEdit ? "PATCH" : "POST";
 
-        if (response.ok) {
-            console.log(formToEdit ? "Field updated successfully" : "Field successfully created");
-            setFieldLabel("");
-            setFieldType("");
-            setFieldOptions("");
-            setRequired(false);
-            setDisplay_order("");
-            onFormSubmit();
-        } else {
-            setError(json.error)
+        try {
+            const response = await fetch(url, {
+                method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(field),
+            });
+
+            const json = await response.json();
+
+            if (response.ok) {
+                console.log(formToEdit ? "Field updated successfully" : "Field successfully created");
+                resetForm();
+                onFormSubmit();
+            } else {
+                setError(json.error || "An error occurred");
+            }
+        } catch (error) {
+            setError("An error occurred while submitting the form");
         }
-    }
+    };
+
+    const resetForm = () => {
+        setFieldLabel('');
+        setFieldType('');
+        setFieldOptions('');
+        setRequired(false);
+        setDisplayOrder('');
+        setError(null);
+    };
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -54,7 +73,7 @@ const FieldForm = ({ formToEdit, onFormSubmit, formId }) => {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                     type="text"
                     id="field_label"
-                    value={field_label}
+                    value={fieldLabel}
                     onChange={(e) => setFieldLabel(e.target.value)}
                     required
                 />
@@ -64,7 +83,7 @@ const FieldForm = ({ formToEdit, onFormSubmit, formId }) => {
                 <select
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                     id="field_type"
-                    value={field_type}
+                    value={fieldType}
                     onChange={(e) => setFieldType(e.target.value)}
                     required
                 >
@@ -76,14 +95,14 @@ const FieldForm = ({ formToEdit, onFormSubmit, formId }) => {
                     <option value="select">Select</option>
                 </select>
             </div>
-            {(field_type === 'radio' || field_type === 'select') && (
+            {(fieldType === 'radio' || fieldType === 'select') && (
                 <div>
                     <label htmlFor="field_options" className="block text-sm font-medium text-gray-700">Field Options (comma-separated):</label>
                     <input
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                         type="text"
                         id="field_options"
-                        value={field_options}
+                        value={fieldOptions}
                         onChange={(e) => setFieldOptions(e.target.value)}
                         required
                     />
@@ -107,8 +126,8 @@ const FieldForm = ({ formToEdit, onFormSubmit, formId }) => {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                     type="number"
                     id="display_order"
-                    value={display_order}
-                    onChange={(e) => setDisplay_order(e.target.value)}
+                    value={displayOrder}
+                    onChange={(e) => setDisplayOrder(e.target.value)}
                     required
                 />
             </div>
@@ -121,6 +140,6 @@ const FieldForm = ({ formToEdit, onFormSubmit, formId }) => {
             {error && <p className="text-red-500 text-xs italic">{error}</p>}
         </form>
     );
-}
+};
 
 export default FieldForm;

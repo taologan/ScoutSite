@@ -32,7 +32,9 @@ const InputField = ({ fieldDetails, value, onChange }) => {
                 );
             case 'radio':
             case 'select':
-                const options = fieldDetails.field_options.split(',').map(option => option.trim());
+                const options = Array.isArray(fieldDetails.field_options)
+                    ? fieldDetails.field_options
+                    : JSON.parse(fieldDetails.field_options || '[]');
                 return fieldDetails.field_type === 'radio' ? (
                     <div className="space-y-2">
                         {options.map((option, index) => (

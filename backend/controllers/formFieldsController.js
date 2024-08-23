@@ -2,6 +2,7 @@
 
 const createFormField = async (req, res) => {
     const {
+        scouting_form_id,
         field_label,
         field_type,
         field_options,
@@ -12,7 +13,7 @@ const createFormField = async (req, res) => {
         const { error } = await supabase
             .from("form_fields")
             .insert({
-                scouting_form_id: null,
+                scouting_form_id,
                 field_label,
                 field_type,
                 field_options,
